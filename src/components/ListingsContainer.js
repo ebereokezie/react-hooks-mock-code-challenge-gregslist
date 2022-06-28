@@ -1,11 +1,29 @@
-import React from "react";
-// import ListingCard from "./ListingCard";
+import React, { useEffect} from "react";
+import ListingCard from "./ListingCard";
 
-function ListingsContainer() {
+
+
+function ListingsContainer({listings, setListings, handleDeletedListings, search }) {
+
+  useEffect(()=>{
+    fetch("http://localhost:6001/listings")
+    .then(data => data.json())
+    .then(data=> setListings(data))
+  }, [])
+
+const searchableListings = listings.filter((listing)=> {
+  if(search === "") return true;
+
+  return listing.description.includes(search)
+})
+
+
   return (
     <main>
       <ul className="cards">
-        {/* use the ListingCard component to display listings */}
+        {searchableListings.map((listing) =>{
+    return (<ListingCard key ={listing.id} listing = {listing}  handleDeletedListings = {handleDeletedListings} />)
+  })}
       </ul>
     </main>
   );
